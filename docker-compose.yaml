@@ -5,9 +5,10 @@ services:
       - "8000:8000"
     volumes:
       - ./:/app
+      - media_data:/app/mediafiles
     env_file:
       - .env
-    command: python manage.py runserver 127.0.0.1:8000
+    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
 
@@ -22,3 +23,4 @@ services:
 
 volumes:
   postgres_data:
+  media_data:
