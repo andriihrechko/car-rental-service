@@ -13,6 +13,7 @@ services:
              python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:17-alpine
@@ -23,6 +24,14 @@ services:
     env_file:
       - .env
 
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
 volumes:
   postgres_data:
   media_data:
+  redis_data:
