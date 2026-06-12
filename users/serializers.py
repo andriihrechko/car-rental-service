@@ -22,3 +22,11 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
+
+
+class UserMeSerializer(serializers.ModelSerializer):
+    """Serializer for the currently authenticated user."""
+    class Meta:
+        model = User
+        fields = ("id", "email", "first_name", "last_name")
+        read_only_fields = ("id", "email")
