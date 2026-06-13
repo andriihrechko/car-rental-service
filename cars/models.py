@@ -9,6 +9,8 @@ class FuelType(models.TextChoices):
 
 
 class Car(models.Model):
+    """Car model representing a vehicle available for rental."""
+
     brand = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
     year = models.PositiveSmallIntegerField()
