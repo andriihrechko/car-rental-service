@@ -28,4 +28,4 @@ class UserAdmin(UserAdmin):
             },
         ),
     )
-    ordering = ('email',)
+    ordering = ("email",)
