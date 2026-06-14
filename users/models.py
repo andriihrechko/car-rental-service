@@ -7,10 +7,13 @@ from users.managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email instead of username."""
+
     username = None
     email = models.EmailField(unique=True, max_length=255, db_index=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    first_name = models.CharField(max_length=63, null=True)
+    last_name = models.CharField(max_length=63, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

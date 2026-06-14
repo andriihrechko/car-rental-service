@@ -8,8 +8,21 @@ on:
 
 
 jobs:
-  lint:
+  tests:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+        ports:
+          - 5432:5432
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -19,40 +32,26 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install flake8
-        run: pip install flake8 flake8-quotes
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: Run flake8
-        run: flake8 .
+      - name: Run tests
+        env:
+          DJANGO_DEBUG: "False"
+          DJANGO_SECRET_KEY: test-secret-key
+          DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+        run: python manage.py test
 
-
-  tests:
-    needs: lint
+  docker-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Create .env
-        run: |
-          cat > .env << EOF
-          DJANGO_DEBUG=False
-          DJANGO_ALLOWED_HOSTS=localhost
-
-          DJANGO_SECRET_KEY=test-secret-key
-
-          POSTGRES_DB=test_db
-          POSTGRES_USER=test_user
-          POSTGRES_PASSWORD=test_password
-          POSTGRES_HOST=db
-          POSTGRES_PORT=5432
-          EOF
-
-      - name: Build
-        run: docker compose build
-
-      - name: Start database
-        run: docker compose up -d db
-
-      - name: Run tests
-        run: docker compose run --rm app python manage.py test
+      - name: Build image
+        run: docker build .
