@@ -12,7 +12,7 @@ CAR_LIST_URL = reverse("cars:car-list")
 
 
 def car_detail_url(car_id):
-    return reverse("car-detail", args=[car_id])
+    return reverse("cars:car-detail", args=[car_id])
 
 
 def create_car(**kwargs):
