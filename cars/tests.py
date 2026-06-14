@@ -5,9 +5,10 @@ from rest_framework.test import APITestCase
 
 from cars.models import Car
 
+
 User = get_user_model()
 
-CAR_LIST_URL = reverse("car-list")
+CAR_LIST_URL = reverse("cars:car-list")
 
 
 def car_detail_url(car_id):
