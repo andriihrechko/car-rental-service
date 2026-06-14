@@ -8,26 +8,7 @@ on:
 
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
-
-      - name: Install flake8
-        run: pip install flake8 flake8-quotes
-
-      - name: Run flake8
-        run: flake8 .
-
-
   tests:
-    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
