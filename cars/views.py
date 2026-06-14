@@ -10,7 +10,12 @@ from cars.serializers import CarSerializer
 class CarFilter(filters.FilterSet):
     min_year = filters.NumberFilter(field_name="year", lookup_expr="gte")
     max_year = filters.NumberFilter(field_name="year", lookup_expr="lte")
-    is_available = filters.BooleanFilter(field_name="inventory", lookup_expr="gt", label="Available")
+    is_available = filters.BooleanFilter(method="filter_available", label="Available")
+
+    def filter_available(self, queryset, name, value):
+        if value:
+            return queryset.filter(inventory__gt=0)
+        return queryset.filter(inventory=0)
 
     class Meta:
         model = Car
