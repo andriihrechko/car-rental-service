@@ -71,6 +71,39 @@ class AuthenticatedCarApiTests(APITestCase):
         res = self.client.post(CAR_LIST_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_filter_by_brand(self):
+        create_car(brand="Toyota")
+        create_car(brand="Honda")
+        res = self.client.get(CAR_LIST_URL, {"brand": "Toyota"})
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data[0]["brand"], "Toyota")
+
+    def test_filter_by_fuel_type(self):
+        create_car(fuel_type="GAS")
+        create_car(fuel_type="ELECTRIC")
+        res = self.client.get(CAR_LIST_URL, {"fuel_type": "GAS"})
+        self.assertEqual(len(res.data), 1)
+
+    def test_filter_by_min_year(self):
+        create_car(year=2020)
+        create_car(year=2022)
+        res = self.client.get(CAR_LIST_URL, {"min_year": 2021})
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data[0]["year"], 2022)
+
+    def test_filter_by_max_year(self):
+        create_car(year=2020)
+        create_car(year=2022)
+        res = self.client.get(CAR_LIST_URL, {"max_year": 2021})
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data[0]["year"], 2020)
+
+    def test_filter_available_cars(self):
+        create_car(inventory=5)
+        create_car(inventory=0)
+        res = self.client.get(CAR_LIST_URL, {"is_available": True})
+        self.assertEqual(len(res.data), 1)
+
 
 class StaffCarApiTests(APITestCase):
     """Tests for staff users."""
