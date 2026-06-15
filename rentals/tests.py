@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -6,11 +7,13 @@ from rest_framework.test import APITestCase
 from cars.models import Car
 from rentals.models import Rental
 
+User = get_user_model()
+
 
 class RentalAPITests(APITestCase):
 
     def setUp(self):
-        self.user = self.django_user_model.objects.create_user(
+        self.user = User.objects.create_user(
             email="user@test.com",
             password="pass1234",
         )
@@ -82,7 +85,7 @@ class RentalAPITests(APITestCase):
     def test_list_rentals_only_own(self):
         self.client.post(reverse("rental-list"), self.rental_data)
 
-        other_user = self.django_user_model.objects.create_user(
+        other_user = User.objects.create_user(
             email="other@test.com", password="pass1234"
         )
         from rest_framework.test import APIClient
