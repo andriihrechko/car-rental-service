@@ -16,10 +16,14 @@ DEBUG = env.bool("DJANGO_DEBUG")
 SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
 
-TIME_ZONE = env.str("TIME_ZONE")
+TIME_ZONE = env.str("TIME_ZONE", default="Europe/Kiev")
 
-TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN")
-TELEGRAM_ADMIN_CHAT_ID = env.int("TELEGRAM_ADMIN_CHAT_ID")
+TELEGRAM_BOT_TOKEN = env.str(
+    "TELEGRAM_BOT_TOKEN", default="telegram_bot_token"
+)
+TELEGRAM_ADMIN_CHAT_ID = env.int(
+    "TELEGRAM_ADMIN_CHAT_ID", default="telegram_char_id"
+)
 
 CELERY_BROKER_URL = env.str(
     "CELERY_BROKER_URL",
