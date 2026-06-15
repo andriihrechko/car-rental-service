@@ -18,12 +18,8 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
 
 TIME_ZONE = env.str("TIME_ZONE", default="Europe/Kiev")
 
-TELEGRAM_BOT_TOKEN = env.str(
-    "TELEGRAM_BOT_TOKEN", default="telegram_bot_token"
-)
-TELEGRAM_ADMIN_CHAT_ID = env.int(
-    "TELEGRAM_ADMIN_CHAT_ID", default="telegram_char_id"
-)
+TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN", default="")
+TELEGRAM_ADMIN_CHAT_ID = env.int("TELEGRAM_ADMIN_CHAT_ID", default=0)
 
 CELERY_BROKER_URL = env.str(
     "CELERY_BROKER_URL",
