@@ -1,7 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, permissions
+from rest_framework import permissions, viewsets
 from rest_framework.filters import SearchFilter
 
+from cars.filters import CarFilter
 from cars.models import Car
 from cars.serializers import CarSerializer
 
@@ -12,7 +13,7 @@ class CarViewSet(viewsets.ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ["brand", "fuel_type", "inventory"]
+    filterset_class = CarFilter
     search_fields = ["brand", "model"]
 
     def get_permissions(self):
