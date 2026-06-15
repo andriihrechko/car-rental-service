@@ -9,3 +9,5 @@ redis
 celery
 gunicorn
 psycopg2-binary
+django-celery-beat
+requests
