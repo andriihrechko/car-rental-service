@@ -1,15 +1,14 @@
 from django.db import models
 
 
-class FuelType(models.TextChoices):
-    GAS = "GAS", "Gas"
-    DIESEL = "DIESEL", "Diesel"
-    HYBRID = "HYBRID", "Hybrid"
-    ELECTRIC = "ELECTRIC", "Electric"
-
-
 class Car(models.Model):
     """Car model representing a vehicle available for rental."""
+
+    class FuelType(models.TextChoices):
+        GAS = "GAS", "Gas"
+        DIESEL = "DIESEL", "Diesel"
+        HYBRID = "HYBRID", "Hybrid"
+        ELECTRIC = "ELECTRIC", "Electric"
 
     brand = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
