@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 from django.test import SimpleTestCase
 
@@ -40,15 +40,10 @@ class NotifyOverdueRentalsTests(SimpleTestCase):
             user_id=7,
         )
 
-        queryset = Mock()
+        queryset = MagicMock()
         queryset.exists.return_value = True
         queryset.count.return_value = 2
-        queryset.__iter__.return_value = iter(
-            [
-                first_rental,
-                second_rental,
-            ]
-        )
+        queryset.__iter__.return_value = iter([first_rental,second_rental,])
 
         rental_model = Mock()
         rental_model.objects.filter.return_value = queryset
