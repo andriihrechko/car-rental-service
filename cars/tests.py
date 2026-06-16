@@ -8,11 +8,11 @@ from cars.models import Car
 
 User = get_user_model()
 
-CAR_LIST_URL = reverse("cars:car-list")
+CAR_LIST_URL = reverse("car-list")
 
 
 def car_detail_url(car_id):
-    return reverse("cars:car-detail", args=[car_id])
+    return reverse("car-detail", args=[car_id])
 
 
 def create_car(**kwargs):
@@ -146,7 +146,13 @@ class StaffCarApiTests(APITestCase):
         self.assertFalse(Car.objects.filter(id=car.id).exists())
 
     def test_filter_available_with_single_inventory(self):
-        Car.objects.create(brand="Ford", model="Focus", year=2020,
-                           fuel_type="GAS", daily_rate="30.00", inventory=1)
+        Car.objects.create(
+            brand="Ford",
+            model="Focus",
+            year=2020,
+            fuel_type="GAS",
+            daily_rate="30.00",
+            inventory=1,
+        )
         res = self.client.get(CAR_LIST_URL, {"is_available": "true"})
         self.assertEqual(len(res.data), 1)
