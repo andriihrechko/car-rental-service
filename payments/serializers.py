@@ -4,9 +4,7 @@ from payments.models import Payment
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    rental = serializers.PrimaryKeyRelatedField(
-        source="rental", read_only=True
-    )
+    rental = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Payment
