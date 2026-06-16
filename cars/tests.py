@@ -101,8 +101,9 @@ class AuthenticatedCarApiTests(APITestCase):
 
     def test_filter_available_cars(self):
         create_car(inventory=5)
-        create_car(inventory=0)
-        res = self.client.get(CAR_LIST_URL, {"is_available": True})
+        create_car(model="Corolla", inventory=0)
+        res = self.client.get(CAR_LIST_URL, {"is_available": "true"})
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
 
 
@@ -146,7 +147,13 @@ class StaffCarApiTests(APITestCase):
         self.assertFalse(Car.objects.filter(id=car.id).exists())
 
     def test_filter_available_with_single_inventory(self):
-        Car.objects.create(brand="Ford", model="Focus", year=2020,
-                           fuel_type="GAS", daily_rate="30.00", inventory=1)
+        Car.objects.create(
+            brand="Ford",
+            model="Focus",
+            year=2020,
+            fuel_type="GAS",
+            daily_rate="30.00",
+            inventory=1,
+        )
         res = self.client.get(CAR_LIST_URL, {"is_available": "true"})
         self.assertEqual(len(res.data), 1)
