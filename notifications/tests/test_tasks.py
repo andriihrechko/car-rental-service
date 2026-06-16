@@ -106,5 +106,5 @@ class SendPaymentNotificationTests(SimpleTestCase):
         )
 
         mock_send.assert_called_once_with(
-            message=expected_message,
+            expected_message,
         )

@@ -40,4 +40,4 @@ def send_payment_notification(payment, payment_id: int):
         f"Amount: {payment.money_to_pay}"
     )
 
-    NotificationService.send(message=message)
+    NotificationService.send(message)
