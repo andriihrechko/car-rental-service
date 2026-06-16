@@ -37,7 +37,10 @@ class RentalAPITests(APITestCase):
         }
 
     def test_create_rental_success(self):
-        res = self.client.post(reverse("rental-list"), self.rental_data)
+        # Змінено на rentals:rental-list
+        res = self.client.post(
+            reverse("rentals:rental-list"), self.rental_data
+        )
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Rental.objects.count(), 1)
 
@@ -47,22 +50,28 @@ class RentalAPITests(APITestCase):
             "start_date": self.today + timedelta(days=5),
             "end_date": self.today,
         }
-        res = self.client.post(reverse("rental-list"), data)
+        # Змінено на rentals:rental-list
+        res = self.client.post(reverse("rentals:rental-list"), data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_rental_no_inventory(self):
         self.car.inventory = 0
         self.car.save()
 
-        res = self.client.post(reverse("rental-list"), self.rental_data)
+        # Змінено на rentals:rental-list
+        res = self.client.post(
+            reverse("rentals:rental-list"), self.rental_data
+        )
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_return_rental(self):
-        self.client.post(reverse("rental-list"), self.rental_data)
+        # Змінено на rentals:rental-list
+        self.client.post(reverse("rentals:rental-list"), self.rental_data)
         rental = Rental.objects.first()
 
+        # Змінено на rentals:rental-return-rental
         res = self.client.post(
-            reverse("rental-return-rental", args=[rental.pk])
+            reverse("rentals:rental-return-rental", args=[rental.pk])
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -70,11 +79,13 @@ class RentalAPITests(APITestCase):
         self.assertEqual(rental.status, Rental.Status.COMPLETED)
 
     def test_cancel_rental(self):
-        self.client.post(reverse("rental-list"), self.rental_data)
+        # Змінено на rentals:rental-list
+        self.client.post(reverse("rentals:rental-list"), self.rental_data)
         rental = Rental.objects.first()
 
+        # Змінено на rentals:rental-cancel-rental
         res = self.client.post(
-            reverse("rental-cancel-rental", args=[rental.pk])
+            reverse("rentals:rental-cancel-rental", args=[rental.pk])
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -82,7 +93,8 @@ class RentalAPITests(APITestCase):
         self.assertEqual(rental.status, Rental.Status.CANCELLED)
 
     def test_list_rentals_only_own(self):
-        self.client.post(reverse("rental-list"), self.rental_data)
+        # Змінено на rentals:rental-list
+        self.client.post(reverse("rentals:rental-list"), self.rental_data)
 
         other_user = User.objects.create_user(
             email="other@test.com", password="pass1234"
@@ -90,6 +102,7 @@ class RentalAPITests(APITestCase):
         other_client = APIClient()
         other_client.force_authenticate(user=other_user)
 
-        res = other_client.get(reverse("rental-list"))
+        # Змінено на rentals:rental-list
+        res = other_client.get(reverse("rentals:rental-list"))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 0)
