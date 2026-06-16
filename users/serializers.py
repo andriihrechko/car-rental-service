@@ -10,13 +10,14 @@ class SignUpSerializer(serializers.ModelSerializer):
     Serializer for the user signup with email and password.
     First name and last name are optional.
     """
+
     class Meta:
         model = User
         fields = ("email", "password", "first_name", "last_name")
         extra_kwargs = {
             "password": {
                 "write_only": True,
-                "style": {"input_type": "password"}
+                "style": {"input_type": "password"},
             },
         }
 
@@ -26,6 +27,7 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 class UserMeSerializer(serializers.ModelSerializer):
     """Serializer for the currently authenticated user."""
+
     class Meta:
         model = User
         fields = ("id", "email", "first_name", "last_name")
