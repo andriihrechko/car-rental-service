@@ -27,11 +27,11 @@ class Migration(migrations.Migration):
                     "status",
                     models.CharField(
                         choices=[
-                            ("pending", "Pending"),
-                            ("paid", "Paid"),
-                            ("expired", "Expired"),
+                            ("PENDING", "Pending"),
+                            ("PAID", "Paid"),
+                            ("EXPIRED", "Expired"),
                         ],
-                        default="pending",
+                        default="PENDING",
                         max_length=20,
                     ),
                 ),
@@ -39,11 +39,11 @@ class Migration(migrations.Migration):
                     "type",
                     models.CharField(
                         choices=[
-                            ("rental", "Rental"),
-                            ("cancellation_fee", "Cancellation_fee"),
-                            ("overdue_fee", "Overdue_fee"),
+                            ("RENTAL", "Rental"),
+                            ("CANCELLATION_FEE", "Cancellation fee"),
+                            ("OVERDUE_FEE", "Overdue fee"),
                         ],
-                        default="rental",
+                        default="RENTAL",
                         max_length=20,
                     ),
                 ),

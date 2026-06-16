@@ -3,14 +3,14 @@ from django.db import models
 
 class Payment(models.Model):
     class Status(models.TextChoices):
-        PENDING = 'pending', 'Pending'
-        PAID = 'paid', 'Paid'
-        EXPIRED = 'expired', 'Expired'
+        PENDING = "PENDING", "Pending"
+        PAID = "PAID", "Paid"
+        EXPIRED = "EXPIRED", "Expired"
 
     class Type(models.TextChoices):
-        RENTAL = 'rental', 'Rental'
-        CANCELLATION_FEE = 'cancellation_fee', 'Cancellation_fee'
-        OVERDUE_FEE = 'overdue_fee', 'Overdue_fee'
+        RENTAL = "RENTAL", "Rental"
+        CANCELLATION_FEE = "CANCELLATION_FEE", "Cancellation fee"
+        OVERDUE_FEE = "OVERDUE_FEE", "Overdue fee"
 
     status = models.CharField(
         choices=Status.choices,
