@@ -5,11 +5,13 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from core.routers import router
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/service/users/", include("users.urls", namespace="users")),
-    path("api/service/", include("cars.urls", namespace="cars")),
+    path("api/service/", include(router.urls)),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/schema/swagger/",
