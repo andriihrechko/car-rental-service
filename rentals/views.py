@@ -30,10 +30,10 @@ class RentalViewSet(
     def get_queryset(self):
         """Return rentals for current user. Staff can see all rentals."""
         user = self.request.user
-        qs = Rental.objects.select_related("car", "user")
+        queryset = Rental.objects.select_related("car", "user")
         if not user.is_staff:
-            qs = qs.filter(user=user)
-        return qs
+            queryset = queryset.filter(user=user)
+        return queryset
 
     @action(detail=True, methods=["post"], url_path="return")
     def return_rental(self, request, pk=None):
