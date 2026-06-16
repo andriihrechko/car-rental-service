@@ -28,6 +28,7 @@ class RentalViewSet(
     filterset_class = RentalFilter
 
     def get_queryset(self):
+        """Return rentals for current user. Staff can see all rentals."""
         user = self.request.user
         qs = Rental.objects.select_related("car", "user")
         if not user.is_staff:
@@ -36,6 +37,7 @@ class RentalViewSet(
 
     @action(detail=True, methods=["post"], url_path="return")
     def return_rental(self, request, pk=None):
+        """Mark rental as COMPLETED and restore car inventory."""
         rental = self.get_object()
         serializer = RentalReturnSerializer(
             rental, data={}, context={"request": request}
@@ -46,6 +48,7 @@ class RentalViewSet(
 
     @action(detail=True, methods=["post"], url_path="cancel")
     def cancel_rental(self, request, pk=None):
+        """Cancel a BOOKED rental and restore car inventory."""
         rental = self.get_object()
         serializer = RentalCancelSerializer(
             rental, data={}, context={"request": request}
