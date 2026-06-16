@@ -81,8 +81,6 @@ class RentalReturnSerializer(serializers.ModelSerializer):
             if today > instance.end_date
             else Rental.Status.COMPLETED
         )
-        instance.car.inventory += 1
-        instance.car.save(update_fields=["inventory"])
         instance.save()
         return instance
 
@@ -102,7 +100,5 @@ class RentalCancelSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.status = Rental.Status.CANCELLED
-        instance.car.inventory += 1
-        instance.car.save(update_fields=["inventory"])
         instance.save()
         return instance

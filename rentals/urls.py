@@ -1,9 +1,14 @@
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from rentals.views import RentalViewSet
 
 
-router = DefaultRouter()
-router.register("rentals", RentalViewSet, basename="rental")
+app_name = "rentals"
 
-urlpatterns = router.urls
+router = DefaultRouter()
+router.register("rentals", RentalViewSet)
+
+urlpatterns = [
+    path("", include(router.urls)),
+]

@@ -1,7 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -23,14 +22,14 @@ class RentalViewSet(
     """ViewSet for managing rentals."""
 
     serializer_class = RentalSerializer
-    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = RentalFilter
+    queryset = Rental.objects.select_related("car", "user")
 
     def get_queryset(self):
         """Return rentals for current user. Staff can see all rentals."""
         user = self.request.user
-        queryset = Rental.objects.select_related("car", "user")
+        queryset = self.queryset
         if not user.is_staff:
             queryset = queryset.filter(user=user)
         return queryset
