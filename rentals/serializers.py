@@ -36,28 +36,26 @@ class RentalSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         car = validated_data["car"]
+        start_date = validated_data["start_date"]
+        end_date = validated_data["end_date"]
 
-        if car.inventory < 1:
-            raise serializers.ValidationError(
-                {"car": "No inventory available for this car."}
-            )
-
-        overlapping = Rental.objects.filter(
+        active_rentals_count = Rental.objects.filter(
             car=car,
             status__in=[Rental.Status.BOOKED, Rental.Status.OVERDUE],
-            start_date__lte=validated_data["end_date"],
-            end_date__gte=validated_data["start_date"],
-        ).exists()
-        if overlapping:
+            start_date__lte=end_date,
+            end_date__gte=start_date,
+        ).count()
+
+        if active_rentals_count >= car.inventory:
             raise serializers.ValidationError(
-                {"car": "This car already has an overlapping rental."}
+                {
+                    "car": "No available inventory"
+                    " for this car on the selected dates."
+                }
             )
 
         validated_data["price_per_day"] = car.daily_rate
         validated_data["user"] = self.context["request"].user
-
-        car.inventory -= 1
-        car.save(update_fields=["inventory"])
 
         return super().create(validated_data)
 
