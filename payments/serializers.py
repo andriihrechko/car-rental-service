@@ -1,10 +1,13 @@
 from rest_framework import serializers
 
 from payments.models import Payment
-from rentals.models import Rental
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    rental = serializers.PrimaryKeyRelatedField(
+        source="rental", read_only=True
+    )
+
     class Meta:
         model = Payment
         fields = (
@@ -18,12 +21,6 @@ class PaymentSerializer(serializers.ModelSerializer):
         )
         read_only_fields = (
             "id",
-            "status",
             "session_id",
             "session_url",
-            "money_to_pay",
         )
-
-
-class PaymentCreateSerializer(serializers.Serializer):
-    rental = serializers.PrimaryKeyRelatedField(queryset=Rental.objects.all())

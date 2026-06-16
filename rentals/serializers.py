@@ -48,10 +48,7 @@ class RentalSerializer(serializers.ModelSerializer):
 
         if active_rentals_count >= car.inventory:
             raise serializers.ValidationError(
-                {
-                    "car": "No available inventory"
-                    " for this car on the selected dates."
-                }
+                {"car": "No available car on the selected dates."}
             )
 
         validated_data["price_per_day"] = car.daily_rate
