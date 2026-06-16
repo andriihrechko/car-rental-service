@@ -3,6 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import environ
+from celery.schedules import crontab
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,6 +16,15 @@ DEBUG = env.bool("DJANGO_DEBUG")
 SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
 
+TIME_ZONE = env.str("TIME_ZONE", default="Europe/Kiev")
+
+TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN", default="")
+TELEGRAM_ADMIN_CHAT_ID = env.int("TELEGRAM_ADMIN_CHAT_ID", default=0)
+
+CELERY_BROKER_URL = env.str(
+    "CELERY_BROKER_URL",
+    default="redis://redis:6379/0",
+)
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -110,8 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
-
 USE_I18N = True
 
 USE_TZ = True
@@ -152,4 +160,11 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_HEADER_TYPES": ("JWT",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZE",
+}
+
+CELERY_BEAT_SCHEDULE = {
+    "notify-overdue-rentals": {
+        "task": "notifications.tasks.notify_overdue_rentals",
+        "schedule": crontab(hour=9, minute=0),
+    },
 }
