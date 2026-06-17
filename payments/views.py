@@ -2,6 +2,7 @@ import stripe
 from django.conf import settings
 from django.http import HttpResponse
 from rest_framework import mixins, status, viewsets
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -71,7 +72,7 @@ class PaymentCancelView(APIView):
 
 class StripeWebhookView(APIView):
     authentication_classes = []
-    permission_classes = []
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         payload = request.body
@@ -90,10 +91,10 @@ class StripeWebhookView(APIView):
 
         if event["type"] == "checkout.session.completed":
             session = event["data"]["object"]
-            Payment.objects.filter(session_id=session["id"]).update(
-                status=Payment.Status.PAID
-            )
+            payment = Payment.objects.get(session_id=session["id"])
+            payment.status = Payment.Status.PAID
+            payment.save()
 
-            send_payment_notification.delay(session["id"])
+            send_payment_notification.delay(payment.id)
 
         return HttpResponse(status=200)
