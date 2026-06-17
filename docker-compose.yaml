@@ -47,6 +47,15 @@ services:
     depends_on:
       - redis
 
+  stripe-cli:
+    image: stripe/stripe-cli
+    command: listen --forward-to app:8000/api/service/payments/webhook/
+    environment:
+      STRIPE_API_KEY: ${STRIPE_SECRET_KEY}
+    depends_on:
+      app:
+        condition: service_started
+
 volumes:
   postgres_data:
   media_data:
