@@ -5,6 +5,7 @@ from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from notifications.tasks import send_payment_notification
 from payments.models import Payment
 from payments.serializers import PaymentSerializer
 
@@ -92,5 +93,7 @@ class StripeWebhookView(APIView):
             Payment.objects.filter(session_id=session["id"]).update(
                 status=Payment.Status.PAID
             )
+
+            send_payment_notification.delay(session["id"])
 
         return HttpResponse(status=200)
