@@ -5,6 +5,7 @@ from django.test import SimpleTestCase
 from notifications.notification_service import NotificationService
 
 
+
 class NotificationServiceTests(SimpleTestCase):
 
     @patch(

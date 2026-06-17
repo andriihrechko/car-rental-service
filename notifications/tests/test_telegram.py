@@ -1,7 +1,6 @@
 from unittest.mock import Mock, patch
 
 import requests
-
 from django.conf import settings
 from django.test import SimpleTestCase
 
@@ -20,9 +19,7 @@ class TelegramClientTests(SimpleTestCase):
 
         mock_post.return_value = response
 
-        TelegramClient().send_message(
-            "test",
-        )
+        TelegramClient().send_message("test")
 
         mock_post.assert_called_once_with(
             (
@@ -54,6 +51,4 @@ class TelegramClientTests(SimpleTestCase):
         with self.assertRaises(
             requests.RequestException,
         ):
-            TelegramClient().send_message(
-                "test",
-            )
+            TelegramClient().send_message("test")
