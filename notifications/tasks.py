@@ -11,18 +11,18 @@ from users.models import User
 @shared_task
 @transaction.atomic
 def notify_overdue_rentals():
-    overdue_rentals = Rental.objects.filter(
+    overdue_rentals = Rental.objects.select_related("user").filter(
         actual_return_date__isnull=True,
         end_date__lt=timezone.now().date(),
         status=Rental.Status.BOOKED,
     )
 
+    if not overdue_rentals:
+        return
+
     overdue_rentals.update(
         status=Rental.Status.OVERDUE,
     )
-
-    if not overdue_rentals.exists():
-        return
 
     message = (
         f"🚨 Overdue rentals report\n\n"
@@ -30,7 +30,15 @@ def notify_overdue_rentals():
     )
 
     for rental in overdue_rentals:
-        message += f"Rental: {rental}\nUser ID: {rental.user_id}\n\n"
+        user_first_name = rental.user.first_name
+        user_last_name = rental.user.last_name
+        user_email = rental.user.email
+
+        message += (
+            f"Rental: {rental}\n"
+            f"User:"
+            f" {user_first_name} {user_last_name} - {user_email}\n\n"
+        )
 
     NotificationService.send(message)
 
