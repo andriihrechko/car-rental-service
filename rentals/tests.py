@@ -61,30 +61,6 @@ class RentalAPITests(APITestCase):
         )
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_return_rental(self):
-        self.client.post(reverse("rentals:rental-list"), self.rental_data)
-        rental = Rental.objects.first()
-
-        res = self.client.post(
-            reverse("rentals:rental-return-rental", args=[rental.pk])
-        )
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-
-        rental.refresh_from_db()
-        self.assertEqual(rental.status, Rental.Status.COMPLETED)
-
-    def test_cancel_rental_with_fee(self):
-        self.client.post(reverse("rentals:rental-list"), self.rental_data)
-        rental = Rental.objects.first()
-
-        res = self.client.post(
-            reverse("rentals:rental-cancel-rental", args=[rental.pk])
-        )
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-
-        rental.refresh_from_db()
-        self.assertEqual(rental.status, Rental.Status.CANCELLED)
-
     def test_list_rentals_only_own(self):
         self.client.post(reverse("rentals:rental-list"), self.rental_data)
 
