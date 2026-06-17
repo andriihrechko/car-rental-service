@@ -4,13 +4,22 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework import routers
 
+from cars.views import CarViewSet
+from payments.views import PaymentViewSet
+from rentals.views import RentalViewSet
+
+
+router = routers.DefaultRouter()
+router.register("cars", CarViewSet)
+router.register("rentals", RentalViewSet)
+router.register("payments", PaymentViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/service/users/", include("users.urls", namespace="users")),
-    path("api/service/", include("cars.urls", namespace="cars")),
-    path("api/service/", include("rentals.urls", namespace="rentals")),
+    path("api/service/", include(router.urls)),
     path(
         "api/service/payments/", include("payments.urls", namespace="payments")
     ),
