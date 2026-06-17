@@ -1,8 +1,7 @@
 import stripe
 from django.conf import settings
 from django.http import HttpResponse
-from rest_framework import status
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,23 +9,16 @@ from payments.models import Payment
 from payments.serializers import PaymentSerializer
 
 
-class PaymentListView(ListAPIView):
+class PaymentViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
+    queryset = Payment.objects.select_related("rental")
     serializer_class = PaymentSerializer
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Payment.objects.all()
-        return Payment.objects.filter(user=self.request.user)
-
-
-class PaymentRetrieveView(RetrieveAPIView):
-    queryset = Payment.objects.all()
-    serializer_class = PaymentSerializer
-
-    def get_queryset(self):
-        if self.request.user.is_staff:
-            return Payment.objects.all()
-        return Payment.objects.filter(user=self.request.user)
+            return self.queryset
+        return self.queryset.filter(rental__user=self.request.user)
 
 
 class PaymentSuccessView(APIView):
