@@ -65,7 +65,7 @@ class RentalViewSet(
                 "amount_to_pay": payment.money_to_pay,
                 "payment_url": payment.session_url,
             },
-            status=status.HTTP_201_CREATED,
+            status=status.HTTP_200_OK,
         )
 
     @action(detail=True, methods=["post"], url_path="cancel")
@@ -95,6 +95,6 @@ class RentalViewSet(
                     "amount_to_pay": payment.money_to_pay,
                     "payment_url": payment.session_url,
                 },
-                status=status.HTTP_201_CREATED,
+                status=status.HTTP_200_OK,
             )
         return Response(RentalSerializer(rental).data)

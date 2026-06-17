@@ -30,7 +30,7 @@ class Payment(models.Model):
         related_name="payments",
     )
     session_url = models.URLField(blank=True, null=True)
-    session_id = models.CharField(blank=True, null=True, max_length=255)
+    session_id = models.CharField(unique=True, blank=True, null=True, max_length=255)
     money_to_pay = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
